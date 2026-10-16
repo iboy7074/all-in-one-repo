@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free Resource Bookmarks</title>
+<style>
+:root{--bg:#f6f7f4;--surface:#ffffff;--ink:#1d2421;--muted:#5d6a64;--line:#d9dfda;--accent:#1f6f5c;--accent-ink:#ffffff;--mark:#e4efe9;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121816;--surface:#1b2420;--ink:#e8eeea;--muted:#9aa8a1;--line:#2c3832;--accent:#5fc4a8;--accent-ink:#0c1511;--mark:#243a31}}
+:root[data-theme="dark"]{--bg:#121816;--surface:#1b2420;--ink:#e8eeea;--muted:#9aa8a1;--line:#2c3832;--accent:#5fc4a8;--accent-ink:#0c1511;--mark:#243a31}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;line-height:1.5}
+header{max-width:900px;margin:0 auto;padding:32px 20px 12px}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.8rem,5vw,2.6rem);margin:0 0 6px;letter-spacing:-.01em}
+header p{margin:0;color:var(--muted)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 20px;max-width:900px;margin:0 auto}
+input{width:100%;padding:12px 14px;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px}
+input:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px}
+.chips a{flex:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;font-size:.88rem;background:var(--surface)}
+main{max-width:900px;margin:0 auto;padding:0 20px 48px}
+section{margin-top:28px}
+h2{font-family:Georgia,serif;font-size:1.35rem;margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--accent)}
+ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+li a{display:block;height:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink)}
+li a:hover{border-color:var(--accent);background:var(--mark)}
+li b{display:block;color:var(--accent)}
+li span{font-size:.88rem;color:var(--muted)}
+.hide{display:none}
+.empty{display:none;color:var(--muted);margin-top:24px}
+footer{max-width:900px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+<h1>Free resource bookmarks</h1>
+<p>Free tools for media, design, documents, learning, research, development, productivity, privacy and security. Search or jump to a category.</p>
+</header>
+<div class="bar"><input id="q" type="search" placeholder="Search tools, e.g. pdf, icons, email" aria-label="Search tools"><nav class="chips" id="chips"></nav></div>
+<main id="app"></main>
+<p class="empty" id="empty" style="max-width:900px;margin:0 auto;padding:0 20px">No tools match that search. Try a shorter word.</p>
+<footer>Tools change their pricing and limits over time, so check each site's current free tier.</footer>
+<script>
+const D=[
+["Media & downloads",[
+["Cobalt","https://cobalt.tools","Download social media video and audio"],
+["JustWatch","https://www.justwatch.com","Find where any title is streaming"],
+["Internet Archive","https://archive.org","Old webpages, free software, media"],
+["archive.ph","https://archive.ph","Save a permanent copy of any webpage"],
+["Tunefind","https://www.tunefind.com","Find songs from shows and films"],
+["Radio Garden","https://radio.garden","Listen to radio stations worldwide"],
+["Music for Programming","https://musicforprogramming.net","Long mixes for focus"],
+["myNoise","https://mynoise.net","Custom focus soundscapes"],
+["Summarize.tech","https://www.summarize.tech","Summarize YouTube videos"]]],
+["Image & design",[
+["Photopea","https://www.photopea.com","Photoshop-style editor in the browser"],
+["remove.bg","https://www.remove.bg","One-click background removal"],
+["Cleanup.pictures","https://cleanup.pictures","Erase objects from photos"],
+["Unscreen","https://www.unscreen.com","Remove video backgrounds"],
+["Squoosh","https://squoosh.app","Compress and convert images"],
+["TinyPNG","https://tinypng.com","Simple image compression"],
+["TinEye","https://tineye.com","Reverse image search"],
+["Unsplash","https://unsplash.com","Free high-res photos"],
+["Pexels","https://www.pexels.com","Free photos and videos"],
+["Pixabay","https://pixabay.com","Free images, vectors and music"],
+["unDraw","https://undraw.co","Recolorable illustrations"],
+["Heroicons","https://heroicons.com","Free SVG icons"],
+["Lucide","https://lucide.dev","Clean open-source icon set"],
+["Coolors","https://coolors.co","Color palette generator"]]],
+["PDF & document tools",[
+["TinyWow","https://tinywow.com","100+ free file tools"],
+["Smallpdf","https://smallpdf.com","PDF editing and conversion"],
+["iLovePDF","https://www.ilovepdf.com","Merge, split and compress PDFs"],
+["PDF24","https://tools.pdf24.org","Full PDF toolkit"],
+["Sejda","https://www.sejda.com","Browser-based PDF editor"]]],
+["Books, papers & learning",[
+["Project Gutenberg","https://www.gutenberg.org","70,000+ free classic books"],
+["Open Culture","https://www.openculture.com","Free university courses and media"],
+["Standard Ebooks","https://standardebooks.org","Well-formatted public domain books"],
+["Coursera","https://www.coursera.org","Audit many university courses"],
+["edX","https://www.edx.org","Courses from MIT, Harvard and more"],
+["Khan Academy","https://www.khanacademy.org","K-12 and college subjects"],
+["freeCodeCamp","https://www.freecodecamp.org","Full developer curriculum"],
+["The Odin Project","https://www.theodinproject.com","Free full-stack web path"],
+["CS50","https://cs50.harvard.edu","Harvard's intro CS course"],
+["Open Library","https://openlibrary.org","Borrow books digitally"]]],
+["Research & academic",[
+["Elicit","https://elicit.com","AI research paper assistant"],
+["Consensus","https://consensus.app","Search scientific findings"],
+["Connected Papers","https://www.connectedpapers.com","Map related research visually"],
+["Semantic Scholar","https://www.semanticscholar.org","Free academic search"],
+["SciSpace","https://scispace.com","Understand research papers"],
+["ResearchRabbit","https://www.researchrabbit.ai","Discover related papers"],
+["Google Scholar","https://scholar.google.com","Academic search engine"],
+["Unpaywall","https://unpaywall.org","Find legal free versions of papers"]]],
+["Developer tools",[
+["regex101","https://regex101.com","Test regular expressions"],
+["Code Beautify","https://codebeautify.org","Format and convert code"],
+["explainshell","https://explainshell.com","Understand terminal commands"],
+["Carbon","https://carbon.now.sh","Turn code into images"],
+["Ray.so","https://www.ray.so","Code screenshots"],
+["Phind","https://www.phind.com","Developer AI search"],
+["DevDocs","https://devdocs.io","Many docs, one search"],
+["Can I use","https://caniuse.com","Browser support for web features"],
+["JSON Formatter","https://jsonformatter.org","Format and validate JSON"],
+["Transform","https://transform.tools","Convert between data and code formats"],
+["crontab guru","https://crontab.guru","Explain cron expressions"],
+["Shields.io","https://shields.io","README badges"]]],
+["Productivity & whiteboarding",[
+["Excalidraw","https://excalidraw.com","Hand-drawn style diagrams"],
+["tldraw","https://www.tldraw.com","Infinite browser whiteboard"],
+["Miro","https://miro.com","Collaborative whiteboard"],
+["Notion","https://www.notion.so","Notes, docs and databases"],
+["Obsidian","https://obsidian.md","Local-first markdown notes"],
+["CryptPad","https://cryptpad.fr","Encrypted collaborative docs"]]],
+["Privacy & temp tools",[
+["Temp Mail","https://temp-mail.org","Temporary email address"],
+["10 Minute Mail","https://10minutemail.com","Disposable inbox"],
+["Privnote","https://privnote.com","Self-destructing notes"],
+["file.io","https://www.file.io","Auto-deleting file sharing"],
+["AccountKiller","https://www.accountkiller.com","Find how to delete accounts"],
+["SimpleLogin","https://simplelogin.io","Free email aliases"],
+["Cryptee","https://crypt.ee","Encrypted notes and photos"]]],
+["AI: build & access models",[
+["Google AI Studio","https://aistudio.google.com","Try Gemini models and build quick AI app prototypes"],
+["OpenRouter","https://openrouter.ai","One API key for models from many companies, some free"],
+["Groq","https://groq.com","Runs open-source models at very high speed"]]],
+["AI: reasoning & compute",[
+["Qwen","https://chat.qwen.ai","Alibaba's AI model, good for analyzing and summarizing documents"],
+["Z.ai","https://z.ai","AI chat for step-by-step reasoning and problem solving"],
+["Cerebras","https://www.cerebras.ai","Fast AI hardware platform for running models"]]],
+["AI: image & art creation",[
+["OpenArt","https://openart.ai","Generate images from text prompts"],
+["SeaArt","https://www.seaart.ai","Create artwork and character art with AI"],
+["Tensor Art","https://tensor.art","Generate and share AI images with community models"]]],
+["AI: productivity & visual tools",[
+["Napkin","https://www.napkin.ai","Turns text and ideas into diagrams and visuals"],
+["Workbeaver","https://workbeaver.com","Learns a repetitive task by watching you once, then automates it"],
+["LightPDF","https://lightpdf.com","PDF and image tools, including an image watermark remover"]]],
+["Security & checks",[
+["Have I Been Pwned","https://haveibeenpwned.com","Check if your email appeared in a breach"],
+["VirusTotal","https://www.virustotal.com","Scan files and links"],
+["urlscan.io","https://urlscan.io","Inspect what a link loads"],
+["Security Planner","https://securityplanner.consumerreports.org","Personalized safety advice"]]]
+];
+const app=document.getElementById('app'),chips=document.getElementById('chips');
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+D.forEach(([n,items],i)=>{
+ chips.insertAdjacentHTML('beforeend',`<a href="#c${i}">${esc(n)}</a>`);
+ app.insertAdjacentHTML('beforeend',`<section id="c${i}"><h2>${esc(n)}</h2><ul>${items.map(([t,u,d])=>`<li data-s="${(t+' '+d).toLowerCase()}"><a href="${u}" target="_blank" rel="noopener noreferrer"><b>${esc(t)}</b><span>${esc(d)}</span></a></li>`).join('')}</ul></section>`);
+});
+document.getElementById('q').addEventListener('input',e=>{
+ const v=e.target.value.trim().toLowerCase();let any=false;
+ document.querySelectorAll('section').forEach(s=>{let c=0;
+  s.querySelectorAll('li').forEach(li=>{const m=!v||li.dataset.s.includes(v);li.classList.toggle('hide',!m);if(m)c++});
+  s.classList.toggle('hide',!c);if(c)any=true});
+ document.getElementById('empty').style.display=any?'none':'block';
+});
+</script>
+</body>
+</html>

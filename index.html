@@ -29,21 +29,118 @@ li a:hover{border-color:var(--accent);background:var(--mark)}
 li b{display:block;color:var(--accent)}
 li span{font-size:.88rem;color:var(--muted)}
 .hide{display:none}
+.chips{display:none}
+section{scroll-margin-top:90px}
+#side{position:fixed;top:0;left:0;bottom:0;width:250px;overflow-y:auto;background:var(--surface);border-right:1px solid var(--line);padding:calc(16px + env(safe-area-inset-top,0px)) 12px 24px;z-index:20;transition:transform .2s}
+#side h3{margin:0 8px 10px;font-family:Georgia,serif;font-size:1.1rem}
+#side a{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:.93rem}
+#side a small{color:var(--muted)}
+#side a:hover{background:var(--mark)}
+#side a.on{background:var(--accent);color:var(--accent-ink)}
+#side a.on small{color:var(--accent-ink)}
+#ghb{display:flex;justify-content:space-between;width:100%;margin:2px 0;padding:10px;font:inherit;font-weight:bold;color:var(--ink);background:var(--mark);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+#ghl{margin:2px 0 6px 10px;border-left:2px solid var(--accent);padding-left:4px}
+#menu{display:none;width:100%;margin-bottom:8px;padding:11px 14px;font:inherit;font-weight:bold;color:var(--accent-ink);background:var(--accent);border:0;border-radius:10px}
+@media (min-width:900px){body{padding-left:250px}}
+@media (max-width:899px){#side{transform:translateX(-100%);width:80%;max-width:300px}#side.open{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.45)}#menu{display:block}}
 .empty{display:none;color:var(--muted);margin-top:24px}
 footer{max-width:900px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.85rem}
 </style>
 </head>
 <body>
+<aside id="side" aria-label="Categories"></aside>
 <header>
 <h1>Free resource bookmarks</h1>
 <p>Free tools for media, design, documents, learning, research, development, productivity, privacy and security. Search or jump to a category.</p>
 </header>
-<div class="bar"><input id="q" type="search" placeholder="Search tools, e.g. pdf, icons, email" aria-label="Search tools"><nav class="chips" id="chips"></nav></div>
+<div class="bar"><button id="menu" type="button">☰ Categories</button><input id="q" type="search" placeholder="Search tools, e.g. pdf, icons, email" aria-label="Search tools"><nav class="chips" id="chips"></nav></div>
 <main id="app"></main>
 <p class="empty" id="empty" style="max-width:900px;margin:0 auto;padding:0 20px">No tools match that search. Try a shorter word.</p>
 <footer>Tools change their pricing and limits over time, so check each site's current free tier.</footer>
 <script>
+const H='https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/';
 const D=[
+["GitHub: Cybersecurity handbooks",[
+["Awesome Cybersecurity Handbooks","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks","Personal CTF and red team notes, split into 50+ topic handbooks"],
+["Open Source Everything","https://github.com/An-anonymous-coder/Open-Source-Everything","Huge curated list of the best open source software"],
+["be-a-hacker","https://github.com/s0md3v/be-a-hacker","Roadmap for a self-taught hacker"],
+["Cybersecurity Mastery Roadmap","https://github.com/Hamed233/Cybersecurity-Mastery-Roadmap","Cybersecurity learning roadmap"]]],
+["GitHub: Blue team & SOC",[
+["Security Operations Center",H+"security_operations_center.md","Handbook: how a SOC works and its tools"],
+["SIEM",H+"siem.md","Handbook: SIEM platforms and queries"],
+["Detection Engineering",H+"detection_engineering.md","Handbook: writing and testing detections"],
+["DFIR",H+"dfir.md","Handbook: digital forensics and incident response"],
+["Threat Hunting",H+"threat_hunting.md","Handbook: proactively hunting threats"],
+["Cyber Threat Intelligence",H+"cyber_threat_intelligence.md","Handbook: threat intel sources and tools"],
+["EDR & XDR",H+"edr_xdr.md","Handbook: endpoint detection and response"],
+["IDS & IPS",H+"ids_ips.md","Handbook: intrusion detection and prevention"],
+["SOAR & SecOps",H+"soar_%26_secops.md","Handbook: security automation"],
+["Threat Modeling",H+"threat_modeling.md","Handbook: finding risks while designing"],
+["Secure Architecture",H+"secure_architecture.md","Handbook: designing secure systems"],
+["Attack Surface Management",H+"attack_surface_management.md","Handbook: finding exposed assets"],
+["Forensics",H+"11_forensics.md","Handbook: forensic tools and methods"],
+["Privacy",H+"privacy.md","Handbook: privacy tools and practices"],
+["Sigma Rules","https://github.com/SigmaHQ/sigma","Generic detection rule format and a large rule library"],
+["Awesome Incident Response","https://github.com/meirwah/awesome-incident-response","Curated incident response tools and guides"],
+["Awesome Threat Detection","https://github.com/0x4D31/awesome-threat-detection","Curated threat detection and hunting resources"],
+["Awesome Cybersecurity Blue Team","https://github.com/fabacab/awesome-cybersecurity-blueteam","Curated defensive security resources"],
+["Awesome Forensics","https://github.com/cugu/awesome-forensics","Curated forensics tools and guides"]]],
+["GitHub: Pentest & red team",[
+["Information Gathering",H+"01_information_gathering.md","Handbook: recon and discovery"],
+["Vulnerability Analysis",H+"02_vulnerability_analysis.md","Handbook: finding weaknesses"],
+["Web Application Analysis",H+"03_web_application_analysis.md","Handbook: testing web apps"],
+["Database Assessment",H+"04_database_assessment.md","Handbook: testing databases"],
+["Password Attacks",H+"05_password_attacks.md","Handbook: password testing tools"],
+["Wireless Attacks",H+"06_wireless_attacks.md","Handbook: wireless security testing"],
+["Reverse Engineering",H+"07_reverse_engineering.md","Handbook: analyzing binaries"],
+["Exploitation Tools",H+"08_exploitation_tools.md","Handbook: exploitation tooling"],
+["Sniffing & Spoofing",H+"09_sniffing_%26_spoofing.md","Handbook: network traffic tools"],
+["Post Exploitation",H+"10_post_exploitation.md","Handbook: what happens after access"],
+["Reporting Tools",H+"12_reporting_tools.md","Handbook: writing pentest reports"],
+["Social Engineering Tools",H+"13_social_engineering_tools.md","Handbook: social engineering tooling"],
+["Simulation & Emulation",H+"simulation_emulation.md","Handbook: adversary simulation"],
+["Awesome Hacking","https://github.com/Hack-with-Github/Awesome-Hacking","Curated hacking and security lists"],
+["Awesome Pentest","https://github.com/enaqx/awesome-pentest","Curated penetration testing resources"],
+["OWASP Cheat Sheet Series","https://github.com/OWASP/CheatSheetSeries","Short, practical application security guides"],
+["HackTools","https://github.com/LasCC/Hack-Tools","Browser extension with web pentesting helpers"]]],
+["GitHub: Cloud, mobile & more",[
+["Basics",H+"basics.md","Handbook: cybersecurity fundamentals"],
+["Cloud",H+"cloud.md","Handbook: cloud security"],
+["Container",H+"container.md","Handbook: Docker and Kubernetes security"],
+["Mobile",H+"mobile.md","Handbook: Android and iOS security"],
+["IoT",H+"iot.md","Handbook: internet-connected devices"],
+["Hardware",H+"hardware.md","Handbook: hardware security"],
+["Blockchain",H+"blockchain.md","Handbook: blockchain security"],
+["Cryptography",H+"cryptography.md","Handbook: encryption concepts and tools"],
+["AI & ML",H+"ai_%26_ml.md","Handbook: AI and machine learning security"],
+["CVE",H+"cve.md","Handbook: notable vulnerabilities"],
+["Bug Bounty",H+"bug_bounty.md","Handbook: bug bounty tips and tools"],
+["OSINT",H+"osint.md","Handbook: open-source intelligence"],
+["Operations Security",H+"operations_security.md","Handbook: protecting yourself while testing"],
+["Wordlists",H+"wordlists.md","Handbook: wordlists for testing"],
+["Templates",H+"templates.md","Handbook: report and note templates"],
+["Frameworks",H+"frameworks.md","Handbook: security frameworks"],
+["Awesome OSINT","https://github.com/jivoi/awesome-osint","Curated OSINT tools and sources"]]],
+["GitHub: Learning & roadmaps",[
+["Developer Roadmap","https://github.com/kamranahmedse/developer-roadmap","Step-by-step learning paths for many tech careers"],
+["Free Programming Books","https://github.com/EbookFoundation/free-programming-books","Free books and courses for many languages"],
+["Project-Based Learning","https://github.com/practical-tutorials/project-based-learning","Learn programming by building projects"],
+["OSSU Computer Science","https://github.com/ossu/computer-science","Free self-study computer science degree path"],
+["Build Your Own X","https://github.com/codecrafters-io/build-your-own-x","Tutorials for rebuilding well-known tools from scratch"],
+["Public APIs","https://github.com/public-apis/public-apis","List of free APIs for projects"],
+["Awesome Selfhosted","https://github.com/awesome-selfhosted/awesome-selfhosted","Free software you can host yourself"],
+["Awesome","https://github.com/sindresorhus/awesome","Index of curated lists on every topic"]]],
+["GitHub: Open source apps",[
+["yt-dlp","https://github.com/yt-dlp/yt-dlp","Download video and audio from 1,000+ sites"],
+["Ollama","https://github.com/ollama/ollama","Run AI models locally"],
+["Fooocus","https://github.com/lllyasviel/Fooocus","Create AI images locally"],
+["Whisper","https://github.com/openai/whisper","Speech-to-text in 99+ languages"],
+["Plausible Analytics","https://github.com/plausible/analytics","Privacy-friendly website analytics"],
+["AppFlowy","https://github.com/AppFlowy-IO/AppFlowy","Open-source Notion alternative"],
+["Penpot","https://github.com/penpot/penpot","Open-source UI/UX design tool"],
+["n8n","https://github.com/n8n-io/n8n","Automate workflows"],
+["Cal.com","https://github.com/calcom/cal.com","Open-source scheduling"],
+["Bitwarden","https://github.com/bitwarden/server","Open-source password manager"]]],
 ["Media & downloads",[
 ["Cobalt","https://cobalt.tools","Download social media video and audio"],
 ["JustWatch","https://www.justwatch.com","Find where any title is streaming"],
@@ -143,21 +240,25 @@ const D=[
 ["Have I Been Pwned","https://haveibeenpwned.com","Check if your email appeared in a breach"],
 ["VirusTotal","https://www.virustotal.com","Scan files and links"],
 ["urlscan.io","https://urlscan.io","Inspect what a link loads"],
-["Security Planner","https://securityplanner.consumerreports.org","Personalized safety advice"]]]
-];
-const app=document.getElementById('app'),chips=document.getElementById('chips');
-const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-D.forEach(([n,items],i)=>{
- chips.insertAdjacentHTML('beforeend',`<a href="#c${i}">${esc(n)}</a>`);
- app.insertAdjacentHTML('beforeend',`<section id="c${i}"><h2>${esc(n)}</h2><ul>${items.map(([t,u,d])=>`<li data-s="${(t+' '+d).toLowerCase()}"><a href="${u}" target="_blank" rel="noopener noreferrer"><b>${esc(t)}</b><span>${esc(d)}</span></a></li>`).join('')}</ul></section>`);
-});
-document.getElementById('q').addEventListener('input',e=>{
- const v=e.target.value.trim().toLowerCase();let any=false;
- document.querySelectorAll('section').forEach(s=>{let c=0;
-  s.querySelectorAll('li').forEach(li=>{const m=!v||li.dataset.s.includes(v);li.classList.toggle('hide',!m);if(m)c++});
-  s.classList.toggle('hide',!c);if(c)any=true});
- document.getElementById('empty').style.display=any?'none':'block';
-});
-</script>
-</body>
-</html>
+["Security Planner","https://securityplanner.consumerreports.org","Personalized safety advice"],
+["Downdetector","https://downdetector.com","Check if a website or service is down"],
+["URLVoid","https://www.urlvoid.com","Check if a URL looks sketchy"],
+["Whoer","https://whoer.net","See what websites can learn about you"]]],
+["Utility & misc",[
+["Wolfram Alpha","https://www.wolframalpha.com","Solve math problems instantly"],
+["AlternativeTo","https://alternativeto.net","Find free alternatives to apps"],
+["Flightradar24","https://www.flightradar24.com","Real-time flight tracking"],
+["CamelCamelCamel","https://camelcamelcamel.com","Amazon price history"],
+["Fast.com","https://fast.com","Quick internet speed check"],
+["Speedtest","https://www.speedtest.net","Bandwidth and latency check"],
+["WeTransfer","https://wetransfer.com","Send large files free"],
+["Exchange Rates","https://www.exchange-rates.org","Clean currency conversion"],
+["timeanddate","https://www.timeanddate.com","Meeting planner across time zones"],
+["World Taximeter","https://world.taximeter.org","Estimate cab fare anywhere"]]],
+["Writing & content",[
+["Hemingway Editor","https://hemingwayapp.com","Make your writing clearer"],
+["LanguageTool","https://languagetool.org","Free grammar checker"],
+["DeepL","https://www.deepl.com","High-quality translation"],
+["QuillBot","https://quillbot.com","Paraphrase and summarize"],
+["Perplexity","https://www.perplexity.ai","AI search with sources"],
+["Claude","https://claude.ai",

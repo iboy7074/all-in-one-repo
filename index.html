@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#0b1020">
 <meta name="description" content="A searchable collection of free learning, developer, design, and cybersecurity resources.">
 <title>ResourceHub — Free Resource Bookmarks</title>
+<script>
+window.addEventListener('error',function(e){var d=document.createElement('div');d.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:99;background:#b91c1c;color:#fff;padding:10px 14px;font:13px/1.4 system-ui';d.textContent='Script error: '+e.message+' (line '+e.lineno+')';if(document.body)document.body.appendChild(d);else document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(d)})});
+</script>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#11182b;--card:#151e33;--card2:#1b2740;--text:#eef3ff;--muted:#9aa8c4;--line:#293650;--accent:#8b9cff;--accent2:#63e6be;--shadow:0 18px 50px #0003;--radius:18px}
 :root[data-theme="light"]{color-scheme:light;--bg:#f4f7fc;--panel:#fff;--card:#fff;--card2:#edf2fc;--text:#182238;--muted:#64718b;--line:#dfe6f1;--accent:#4d5fe8;--accent2:#087f68;--shadow:0 14px 38px #24365b12}
@@ -111,7 +114,6 @@ footer{border-top:1px solid var(--line);padding:25px 0 35px;color:var(--muted);f
       <button class="btn ghost menu-btn" id="allBtn" type="button">☷ <span class="label">Browse</span></button>
       <button class="btn ghost" id="favoritesBtn" type="button">★ <span class="label">Favorites</span> <span class="count" id="favCount">0</span></button>
       <button class="btn ghost" id="exportBtn" type="button" title="Export favorites and custom resources">⇩ <span class="label">Export</span></button>
-      <button class="btn ghost" id="importBtn" type="button" title="Import a ResourceHub backup">⇧ <span class="label">Import</span></button>
       <button class="btn" id="themeBtn" type="button" aria-label="Toggle color theme" title="Toggle theme">☀</button>
     </div>
   </div>
@@ -148,7 +150,7 @@ footer{border-top:1px solid var(--line);padding:25px 0 35px;color:var(--muted);f
 
   <section aria-labelledby="resourcesTitle">
     <div class="section-head">
-      <div><h2 id="resourcesTitle">All resources</h2><p id="resultSummary" aria-live="polite">Hand-picked links to get you started.</p></div>
+      <div><h2 id="resourcesTitle">All resources</h2><p id="resultSummary" aria-live="polite">Loading your library…</p></div>
       <div class="filters">
         <select id="sortSelect" aria-label="Sort resources"><option value="featured">Sort: Featured</option><option value="name">Name: A–Z</option><option value="category">Category</option><option value="recent">Recently added</option></select>
         <button class="btn" id="addBtn" type="button">＋ Add resource</button>
@@ -162,7 +164,7 @@ footer{border-top:1px solid var(--line);padding:25px 0 35px;color:var(--muted);f
     <div class="resource-grid" id="resourceGrid"></div>
   </section>
 </main>
-<footer><div class="wrap footer-inner"><span>© <span id="year"></span> ResourceHub · Made for curious minds.</span><span>Bookmarks save on this device · Check each site's terms and safety before use.</span></div></footer>
+<footer><div class="wrap footer-inner"><span>© <span id="year"></span> ResourceHub · Made for curious minds. · build 3</span><span>Bookmarks save on this device · Check each site's terms and safety before use.</span></div></footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <div class="modal-backdrop" id="addModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -182,31 +184,29 @@ footer{border-top:1px solid var(--line);padding:25px 0 35px;color:var(--muted);f
 <script>
 "use strict";
 const CATEGORIES = [
- {name:"Cybersecurity",icon:"🛡️",color:"#8b9cff"},
- {name:"Red Team",icon:"🔴",color:"#ff8585"},
+ {name:"Security & Hacking",icon:"🛡️",color:"#8b9cff"},
  {name:"Blue Team & SOC",icon:"🔵",color:"#73b7ff"},
- {name:"Web Security",icon:"🌐",color:"#62dfc0"},
- {name:"OSINT & Forensics",icon:"🔎",color:"#d4a0ff"},
- {name:"Programming",icon:"💻",color:"#f6c56b"},
- {name:"AI & Open Source",icon:"🤖",color:"#81d6ed"},
+ {name:"Practice & CTF",icon:"🎯",color:"#ff8585"},
+ {name:"Programming & Dev",icon:"💻",color:"#f6c56b"},
+ {name:"AI Tools",icon:"🤖",color:"#81d6ed"},
+ {name:"Open Source",icon:"🌱",color:"#62dfc0"},
  {name:"Learning & Books",icon:"📚",color:"#ff9ac2"},
  {name:"Design & Media",icon:"🎨",color:"#a8e07a"},
- {name:"PDF & Productivity",icon:"🧰",color:"#e6a879"}
+ {name:"Tools & Productivity",icon:"🧰",color:"#e6a879"},
+ {name:"Remote Jobs",icon:"💼",color:"#d4a0ff"},
+ {name:"Explore & Fun",icon:"🧭",color:"#ffd36e"}
 ];
 const SEED = [
- ["Awesome Cybersecurity Handbooks","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks","Cybersecurity","A broad set of practical handbooks covering security concepts, tools, and workflows.",["handbook","reference","github"]],
- ["OWASP Cheat Sheet Series","https://github.com/OWASP/CheatSheetSeries","Web Security","Concise, practical guidance for building and testing safer applications.",["owasp","appsec","defense"]],
- ["OWASP Web Security Testing Guide","https://owasp.org/www-project-web-security-testing-guide/","Web Security","A structured guide to authorized web application security testing.",["web","testing","owasp"]],
- ["PortSwigger Web Security Academy","https://portswigger.net/web-security","Web Security","Free interactive web security lessons and labs for safe practice.",["burp suite","labs","beginner"]],
- ["TryHackMe","https://tryhackme.com/","Red Team","Guided cybersecurity rooms and hands-on learning paths.",["labs","practice","beginner"]],
- ["Hack The Box Academy","https://academy.hackthebox.com/","Red Team","Structured, hands-on cybersecurity modules and practice environments.",["labs","pentesting","training"]],
- ["Kali Linux Documentation","https://www.kali.org/docs/","Red Team","Official documentation for the Kali Linux security distribution.",["linux","tools","docs"]],
- ["MITRE ATT&CK","https://attack.mitre.org/","Blue Team & SOC","A knowledge base of adversary tactics and techniques for detection and defense.",["threat intel","detection","framework"]],
- ["Sigma Rules","https://github.com/SigmaHQ/sigma","Blue Team & SOC","Community detection rules that can be adapted to supported SIEM platforms.",["siem","detections","github"]],
- ["Awesome Incident Response","https://github.com/meirwah/awesome-incident-response","Blue Team & SOC","A curated collection of incident response resources and tools.",["ir","dfir","github"]],
- ["Awesome Threat Detection","https://github.com/0x4D31/awesome-threat-detection","Blue Team & SOC","Resources for threat detection engineering and hunting.",["threat hunting","detection","github"]],
- ["Security Onion Documentation","https://docs.securityonion.net/","Blue Team & SOC","Documentation for a platform used in network security monitoring and threat hunting.",["soc","monitoring","docs"]],
- ["CyberChef","https://gchq.github.io/CyberChef/","OSINT & Forensics","Browser-based utilities for decoding, transforming, and inspecting data.",["analysis","encoding","browser"]],
- ["Autopsy Digital Forensics","https://www.autopsy.com/","OSINT & Forensics","A digital forensics platform for examining disk images and investigating evidence.",["forensics","dfir","tool"]],
- ["Awesome OSINT","https://github.com/jivoi/awesome-osint","OSINT & Forensics","A curated directory of open-source intelligence tools and learning resources.",["osint","research","github"]],
- ["Python Tutorial","https://docs.python.org/3/tutorial/","Programm
+ ["Awesome Cybersecurity Handbooks","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks","Security & Hacking","A broad set of practical handbooks covering security concepts, tools, and workflows.",["handbook","reference","github"]],
+ ["Open Source Everything","https://github.com/An-anonymous-coder/Open-Source-Everything","Security & Hacking","Huge curated list of the best open source software",["Cybersecurity handbooks","github"]],
+ ["be-a-hacker","https://github.com/s0md3v/be-a-hacker","Security & Hacking","Roadmap for a self-taught hacker",["Cybersecurity handbooks","github"]],
+ ["Cybersecurity Mastery Roadmap","https://github.com/Hamed233/Cybersecurity-Mastery-Roadmap","Security & Hacking","Cybersecurity learning roadmap",["Cybersecurity handbooks","github"]],
+ ["Security Operations Center","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/security_operations_center.md","Blue Team & SOC","Handbook: how a SOC works and its tools",["Blue team & SOC","github"]],
+ ["SIEM","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/siem.md","Blue Team & SOC","Handbook: SIEM platforms and queries",["Blue team & SOC","github"]],
+ ["Detection Engineering","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/detection_engineering.md","Blue Team & SOC","Handbook: writing and testing detections",["Blue team & SOC","github"]],
+ ["DFIR","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/dfir.md","Blue Team & SOC","Handbook: digital forensics and incident response",["Blue team & SOC","github"]],
+ ["Threat Hunting","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/threat_hunting.md","Blue Team & SOC","Handbook: proactively hunting threats",["Blue team & SOC","github"]],
+ ["Cyber Threat Intelligence","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/cyber_threat_intelligence.md","Blue Team & SOC","Handbook: threat intel sources and tools",["Blue team & SOC","github"]],
+ ["EDR & XDR","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/edr_xdr.md","Blue Team & SOC","Handbook: endpoint detection and response",["Blue team & SOC","github"]],
+ ["IDS & IPS","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/ids_ips.md","Blue Team & SOC","Handbook: intrusion detection and prevention",["Blue team & SOC","github"]],
+ ["SOAR & SecOps","https://github.com/0xsyr0/Awesome-Cybersecurity-Handbooks/blob/main/handbooks/soa
